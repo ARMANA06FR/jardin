@@ -18,7 +18,7 @@
 // 2. Remplace l’URL ci-dessous par ton endpoint
 // 3. Mets USE_REMOTE_PRODUCTS à true
 
-const USE_REMOTE_PRODUCTS = false;  // ← passe à true une fois le Google Sheet prêt
+const USE_REMOTE_PRODUCTS = true;  // ← passe à true une fois le Google Sheet prêt
 
 // URL de ton API (Google Apps Script ou SheetDB)
 // Exemple Apps Script : "https://script.google.com/macros/s/XXXXXXXX/exec"
