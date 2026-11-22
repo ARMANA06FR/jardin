@@ -20,9 +20,15 @@
 
 const USE_REMOTE_PRODUCTS = true;  // ← passe à true une fois le Google Sheet prêt
 
-// URL de ton API (Google Apps Script ou SheetDB)
-// Exemple Apps Script : "https://script.google.com/macros/s/XXXXXXXX/exec"
-// Exemple SheetDB     : "https://sheetdb.io/api/v1/XXXXXXXX"
+// ============================================================
+// URL unique de ton Google Apps Script
+// Cette URL sert à DEUX choses :
+//   1. Charger les produits / stocks (GET)
+//   2. Recevoir les commandes + envoyer l'email (POST)
+//
+// Après chaque modification du script → Déployer → Nouveau déploiement
+// puis colle ici la NOUVELLE URL.
+// ============================================================
 const PRODUCTS_API_URL = "https://script.google.com/macros/s/AKfycbzg1jQmriPmJMCX0XNfna2bgjOUI1ui9xgCfozRysZpsiO1rbQwz5uOl5bIzxK7BbEI/exec";
 
 

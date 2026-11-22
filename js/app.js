@@ -278,51 +278,37 @@ function setupForm() {
 
     const formData = new FormData(orderForm);
     formData.set('creneaux', selectedSlots.join(' | '));
-    
-    // IMPORTANT : remplace par ton endpoint Formspree
-    const FORMSPREE_URL = 'https://formspree.io/f/xbgoprag';
+
+    // =====================================================
+    // URL de ton Google Apps Script (produits + commandes)
+    // → Même URL que PRODUCTS_API_URL dans products.js
+    // =====================================================
+    const GOOGLE_SCRIPT_URL = (typeof PRODUCTS_API_URL !== 'undefined' && PRODUCTS_API_URL)
+      ? PRODUCTS_API_URL
+      : 'https://script.google.com/macros/s/AKfycbzg1jQmriPmJMCX0XNfna2bgjOUI1ui9xgCfozRysZpsiO1rbQwz5uOl5bIzxK7BbEI/exec';
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours...';
 
     try {
-      if (FORMSPREE_URL.includes('YOUR_FORM_ID')) {
-        console.log('Données de commande (démo) :', Object.fromEntries(formData));
-        showSuccessDemo(formData);
-        return;
-      }
-
-      const response = await fetch(FORMSPREE_URL, {
+      // Envoi unique vers Google Apps Script
+      // (enregistre dans le tableur + envoie l'email)
+      // mode: 'no-cors' est obligatoire avec Google Apps Script
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         body: formData,
-        headers: { 'Accept': 'application/json' },
-        mode: 'cors'
+        mode: 'no-cors'
       });
 
-      // Formspree renvoie souvent { ok: true } en JSON
-      let data = null;
-      try {
-        data = await response.json();
-      } catch (_) {
-        // pas de JSON, on s'en fiche
-      }
-
-      if (response.ok || (data && data.ok === true)) {
-        showSuccess();
-      } else {
-        // Erreur réelle côté Formspree (validation, spam, etc.)
-        console.error('Formspree error:', response.status, data);
-        throw new Error('Erreur lors de l\'envoi');
-      }
-    } catch (err) {
-      // Cas fréquent : la requête a bien atteint Formspree (email reçu)
-      // mais le navigateur a bloqué la lecture de la réponse (CORS / réseau).
-      // Dans ce cas on affiche quand même le message de succès.
-      console.warn('Erreur réseau ou CORS (la commande a probablement été envoyée) :', err);
-
-      // On considère que c'est un succès si on arrive ici après un vrai envoi
-      // (l'utilisateur reçoit déjà l'email).
+      // Avec no-cors on ne peut pas lire la réponse, mais le script
+      // s'exécute bien côté Google → on affiche le succès
       showSuccess();
+
+    } catch (err) {
+      console.error('Erreur lors de l\'envoi :', err);
+      alert('Une erreur est survenue. Réessayez ou contactez-moi directement.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Envoyer ma précommande';
     }
   });
 }
@@ -339,41 +325,6 @@ function showSuccess() {
         (sous 24h en général) pour confirmer votre commande et le créneau de retrait.
       </p>
       <button class="btn btn-primary" onclick="location.reload()">Retour à l'accueil</button>
-    </div>
-  `;
-  cart = {};
-  saveCart();
-  updateCartUI();
-}
-
-function showSuccessDemo(formData) {
-  const name = formData.get('name');
-  const phone = formData.get('phone');
-  const slots = formData.get('creneaux');
-  const panier = formData.get('panier');
-  const total = formData.get('total');
-
-  orderForm.innerHTML = `
-    <div style="text-align:center;padding:1.5rem 1rem">
-      <div style="font-size:3rem;margin-bottom:1rem">✅</div>
-      <h3 style="font-family:var(--font-display);color:var(--green-900);margin-bottom:0.8rem">
-        Précommande simulée (mode démo)
-      </h3>
-      <p style="color:var(--text-light);margin-bottom:1rem;font-size:0.95rem">
-        Formspree n’est pas encore configuré. Voici le résumé de ce qui aurait été envoyé :
-      </p>
-      <div style="background:var(--cream);padding:1rem;border-radius:8px;text-align:left;font-size:0.9rem;margin-bottom:1.5rem">
-        <strong>Nom :</strong> ${name}<br>
-        <strong>Téléphone :</strong> ${phone}<br>
-        <strong>Créneaux :</strong> ${slots}<br>
-        <strong>Panier :</strong><br>
-        <pre style="white-space:pre-wrap;margin:0.3rem 0 0;font-size:0.85rem">${panier}</pre>
-        <strong>Total :</strong> ${total}
-      </div>
-      <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1.2rem">
-        Pour recevoir les vraies commandes par email, suis les instructions dans le <code>README.md</code>.
-      </p>
-      <button class="btn btn-primary" onclick="location.reload()">Recharger la page</button>
     </div>
   `;
   cart = {};
