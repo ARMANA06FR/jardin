@@ -280,7 +280,7 @@ function setupForm() {
     formData.set('creneaux', selectedSlots.join(' | '));
     
     // IMPORTANT : remplace par ton endpoint Formspree
-    const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID';
+    const FORMSPREE_URL = 'https://formspree.io/f/xbgoprag';
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours...';
