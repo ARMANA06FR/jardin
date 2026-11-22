@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fruits et légumes frais de mon jardin – précommande et retrait sur place">
+  <title>Mon Jardin – Fruits & Légumes du jardin</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">Mon Jardin</span>
+      </a>
+      <nav class="nav">
+        <a href="#produits">Produits</a>
+        <a href="#commander">Commander</a>
+        <a href="#retrait">Retrait</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="cart-btn" id="cartBtn" aria-label="Panier">
+        🛒 <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>Fruits & Légumes<br>frais du jardin</h1>
+      <p>Récoltés à la main, de saison, et proposés en précommande.<br>Vous choisissez, je valide, vous venez récupérer.</p>
+      <a href="#produits" class="btn btn-primary">Voir les produits disponibles</a>
+    </div>
+  </section>
+
+  <!-- Produits -->
+  <section id="produits" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Produits disponibles</h2>
+        <p>Les quantités sont mises à jour régulièrement. Stock limité !</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="legume">Légumes</button>
+        <button class="filter-btn" data-filter="fruit">Fruits</button>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Comment ça marche -->
+  <section class="section how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2>Comment ça marche ?</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Choisissez</h3>
+          <p>Parcourez les produits disponibles et ajoutez ce qui vous plaît au panier.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Précommandez</h3>
+          <p>Remplissez le formulaire avec vos coordonnées et vos créneaux de retrait préférés.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Validation</h3>
+          <p>Je reçois votre demande, je vérifie les stocks et je vous confirme par message.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3>Retrait</h3>
+          <p>Vous venez récupérer vos paniers au jardin, sur le créneau convenu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commander -->
+  <section id="commander" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Votre précommande</h2>
+        <p>Les commandes sont soumises à validation. Vous recevrez une confirmation sous 24h.</p>
+      </div>
+
+      <div class="order-layout">
+        <!-- Panier résumé -->
+        <div class="cart-summary" id="cartSummary">
+          <h3>Votre panier</h3>
+          <div id="cartItems">
+            <p class="empty-cart">Votre panier est vide. Ajoutez des produits ci-dessus.</p>
+          </div>
+          <div class="cart-total" id="cartTotal" style="display:none;">
+            <strong>Total estimé :</strong> <span id="totalPrice">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form id="orderForm" class="order-form">
+          <h3>Vos informations</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nom complet *</label>
+              <input type="text" id="name" name="name" required placeholder="Jean Dupont">
+            </div>
+            <div class="form-group">
+              <label for="phone">Téléphone *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="06 12 34 56 78">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="jean@email.com">
+          </div>
+
+          <div class="form-group">
+            <label>Créneaux de retrait préférés *</label>
+            <p class="hint">Cochez un ou plusieurs créneaux qui vous conviennent. Je vous confirmerai le meilleur moment.</p>
+            <div class="slots" id="slots">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message (optionnel)</label>
+            <textarea id="message" name="message" rows="3" placeholder="Allergies, questions, précisions..."></textarea>
+          </div>
+
+          <!-- Hidden fields for Formspree / email -->
+          <input type="hidden" name="_subject" value="Nouvelle précommande - Mon Jardin">
+          <input type="hidden" name="panier" id="panierHidden">
+          <input type="hidden" name="total" id="totalHidden">
+
+          <button type="submit" class="btn btn-primary btn-full" id="submitBtn" disabled>
+            Envoyer ma précommande
+          </button>
+          <p class="form-note">En soumettant, vous acceptez d’être contacté pour la validation de votre commande.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Retrait -->
+  <section id="retrait" class="section retrait">
+    <div class="container">
+      <div class="section-header">
+        <h2>Point de retrait</h2>
+        <p>Retrait uniquement sur place, au jardin.</p>
+      </div>
+      <div class="retrait-card">
+        <div class="retrait-info">
+          <h3>📍 Adresse</h3>
+          <p id="adresse">[Votre adresse complète]<br>Code postal – Ville</p>
+          <p class="note">Remplacez cette adresse par la vôtre dans le fichier index.html</p>
+          
+          <h3>🕒 Créneaux habituels</h3>
+          <ul>
+            <li>Mardi & Jeudi : 17h – 19h</li>
+            <li>Samedi : 9h – 12h</li>
+          </ul>
+          <p class="note">Les créneaux exacts sont confirmés lors de la validation de commande.</p>
+        </div>
+        <div class="retrait-map">
+          <!-- Placeholder map - replace with real Google Maps embed if desired -->
+          <div class="map-placeholder">
+            <span>🗺️</span>
+            <p>Carte du point de retrait<br><small>Ajoutez un embed Google Maps ici</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <div class="container contact-grid">
+      <div>
+        <h2>Une question ?</h2>
+        <p>N’hésitez pas à me contacter directement.</p>
+        <div class="contact-links">
+          <a href="mailto:votre@email.com" class="contact-link">✉️ votre@email.com</a>
+          <a href="https://wa.me/33600000000" class="contact-link" target="_blank" rel="noopener">💬 WhatsApp</a>
+          <a href="https://www.facebook.com/" class="contact-link" target="_blank" rel="noopener">📘 Facebook</a>
+        </div>
+      </div>
+      <div class="about">
+        <h3>À propos</h3>
+        <p>Je cultive mon jardin en respectant la nature, sans pesticides de synthèse. Les fruits et légumes sont récoltés à maturité pour un goût maximal. Les quantités sont limitées car tout est produit à petite échelle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> Mon Jardin – Fruits & Légumes du jardin</p>
+      <p class="small">Site simple hébergé sur GitHub Pages • Précommandes validées manuellement</p>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer (mobile) -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="drawer-header">
+      <h3>Panier</h3>
+      <button id="closeDrawer">✕</button>
+    </div>
+    <div id="drawerItems"></div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
