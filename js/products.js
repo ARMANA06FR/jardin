@@ -18,12 +18,12 @@
 // 2. Remplace l’URL ci-dessous par ton endpoint
 // 3. Mets USE_REMOTE_PRODUCTS à true
 
-const USE_REMOTE_PRODUCTS = true;  // ← passe à true une fois le Google Sheet prêt
+const USE_REMOTE_PRODUCTS = false;  // ← passe à true une fois le Google Sheet prêt
 
 // URL de ton API (Google Apps Script ou SheetDB)
-// Exemple Apps Script : "https://script.google.com/macros/s/AKfycbztPmZ-I5wZWg-hmvmGqaKb4NQ6A7LqGejmgF1p6PVGs8A_b1CO3FCd7oUEYEUnWPr4/exec"
+// Exemple Apps Script : "https://script.google.com/macros/s/XXXXXXXX/exec"
 // Exemple SheetDB     : "https://sheetdb.io/api/v1/XXXXXXXX"
-const PRODUCTS_API_URL = "https://script.google.com/macros/s/AKfycbzw6g4JjKzpEEyIRiKc6PrinNsTnhwOS-z5mw9E2L98RD9aThHRg37wJZHJoqAWEUSB/exec";
+const PRODUCTS_API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
 
 // ============================================
@@ -96,8 +96,7 @@ const PRODUCTS_FALLBACK = [
 //  CRÉNEAUX DE RETRAIT
 // ============================================
 const PICKUP_SLOTS = [
-  { id: "mar-17-19", label: "Mardi 17h – 19h" },
-  { id: "jeu-17-19", label: "Jeudi 17h – 19h" },
-  { id: "sam-9-12",  label: "Samedi 9h – 12h" },
-  { id: "autre",     label: "Autre (précisez dans le message)" }
+  { id: "semaine-16-19", label: "En semaine de 16h00 à 19h00" },
+  { id: "dimanche-16-19", label: "Le dimanche de 16h00 à 19h00" },
+  { id: "autre", label: "Autre (précisez dans le message)" }
 ];
