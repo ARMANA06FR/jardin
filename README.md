@@ -6,109 +6,166 @@ Idéal pour partager un lien sur Facebook ou Leboncoin au lieu de répondre à c
 ## Fonctionnalités
 
 - Catalogue de produits avec photo, prix, stock et description
+- **Gestion des stocks en live** (via Google Sheet – recommandé)
 - Filtres Fruits / Légumes
 - Panier (enregistré dans le navigateur)
-- Formulaire de précommande avec :
-  - Coordonnées client
-  - Sélection de créneaux horaires de retrait
-  - Message libre
-- Envoi de la commande par email (via Formspree – gratuit)
-- Design moderne, responsive (mobile-friendly)
-- Facile à mettre à jour : un seul fichier pour les produits et les stocks
+- Formulaire de précommande avec créneaux de retrait
+- Envoi de la commande par email (Formspree)
+- Design moderne et responsive
+
+---
+
+## Gestion automatique des stocks (recommandé)
+
+Au lieu de modifier le code à chaque vente, tu gères tout depuis un **Google Sheet** (comme un Excel en ligne).  
+Tu changes le stock depuis ton téléphone → le site se met à jour tout seul.
+
+### Étape 1 : Créer le Google Sheet
+
+1. Va sur [sheets.google.com](https://sheets.google.com) et crée un nouveau tableur.
+2. Dans la première ligne, mets exactement ces en-têtes :
+
+| id | name | category | price | unit | stock | image | description |
+|----|------|----------|-------|------|-------|-------|-------------|
+
+3. Remplis avec tes produits. Exemple :
+
+| id | name | category | price | unit | stock | image | description |
+|----|------|----------|-------|------|-------|-------|-------------|
+| tomates | Tomates anciennes | legume | 4.50 | kg | 8 | images/tomates.jpg | Variétés anciennes |
+| pommes | Pommes Golden | fruit | 2.80 | kg | 15 | images/pommes.jpg | Croquantes |
+| courgettes | Courgettes | legume | 2.50 | kg | 6 | images/courgettes.jpg | Tendres |
+
+> **Astuce** : l’`id` doit être unique et sans espace (ex. `tomates`, `pommes-de-terre`).
+
+### Étape 2 : Transformer le tableur en API (Google Apps Script – 100 % gratuit)
+
+1. Dans ton Google Sheet → menu **Extensions** → **Apps Script**
+2. Efface tout le code et colle celui-ci :
+
+```javascript
+function doGet(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const rows = [];
+
+  for (let i = 1; i < data.length; i++) {
+    const row = {};
+    headers.forEach((header, index) => {
+      row[header] = data[i][index];
+    });
+    // On ignore les lignes vides
+    if (row.id) rows.push(row);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify(rows))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+```
+
+3. Clique sur **Déployer** → **Nouveau déploiement**
+4. Type : **Application Web**
+5. Description : `API Produits Jardin`
+6. Exécuter en tant que : **Moi**
+7. Qui a accès : **Tous** (même les utilisateurs anonymes)
+8. Clique sur **Déployer**
+9. **Copie l’URL** qui apparaît (elle ressemble à `https://script.google.com/macros/s/XXXXXXXX/exec`)
+
+### Étape 3 : Brancher le site
+
+1. Ouvre le fichier `js/products.js`
+2. Change ces deux lignes :
+
+```js
+const USE_REMOTE_PRODUCTS = true;   // ← passe à true
+const PRODUCTS_API_URL = "https://script.google.com/macros/s/XXXXXXXX/exec";  // ← colle ton URL
+```
+
+3. Re-uploade le fichier sur GitHub.
+
+C’est tout !  
+Maintenant, dès que tu modifies le stock dans le Google Sheet, le site affiche la nouvelle quantité (rafraîchissement de la page).
+
+### Comment gérer les stocks au quotidien
+
+1. Un client passe commande → tu reçois l’email
+2. Tu vérifies et tu valides (tu lui réponds)
+3. Tu ouvres ton Google Sheet (sur téléphone c’est très pratique)
+4. Tu diminues le stock du produit
+5. Le site est à jour
+
+C’est beaucoup plus simple que de modifier du code.
+
+---
 
 ## Déploiement en 5 minutes (GitHub Pages)
 
-1. Créez un compte GitHub si vous n’en avez pas.
-2. Créez un **nouveau dépôt** (ex. `mon-jardin` ou `fruits-legumes`).
-3. Uploadez **tous les fichiers** de ce dossier (ou clonez et poussez).
-4. Dans les paramètres du dépôt → **Pages** → Source = `main` (ou `master`) / dossier `/ (root)`.
-5. Attendez 1-2 minutes. Votre site sera disponible à :
-   `https://VOTRE-PSEUDO.github.io/NOM-DU-REPO/`
+1. Crée un compte GitHub si besoin
+2. Crée un nouveau dépôt (ex. `mon-jardin`)
+3. Uploade **tous les fichiers** de ce dossier
+4. Paramètres du dépôt → **Pages** → Source = `main` / dossier racine
+5. Ton site sera en ligne à :  
+   `https://ton-pseudo.github.io/mon-jardin/`
 
-Vous pouvez ensuite partager ce lien sur Facebook et Leboncoin.
+---
 
-## Configuration indispensable
+## Configuration de base
 
-### 1. Recevoir les commandes par email (Formspree)
+### Recevoir les commandes par email (Formspree)
 
-Le formulaire est prêt, mais il faut le connecter à votre boîte mail :
-
-1. Allez sur [https://formspree.io](https://formspree.io) et créez un compte gratuit.
-2. Cliquez sur **New Form**.
-3. Donnez-lui un nom (ex. « Commandes Jardin »).
-4. Copiez l’URL qui ressemble à `https://formspree.io/f/xxxxxx`.
-5. Ouvrez le fichier `js/app.js` et remplacez la ligne :
+1. Va sur [formspree.io](https://formspree.io) → crée un compte gratuit
+2. Crée un nouveau formulaire
+3. Copie l’URL (`https://formspree.io/f/xxxxxx`)
+4. Dans `js/app.js`, remplace la ligne :
 
 ```js
 const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID';
 ```
 
-par votre vraie URL.
-
-À partir de ce moment, chaque précommande arrive directement dans votre email.
-
-### 2. Personnaliser les informations
+### Personnaliser les infos du site
 
 | Fichier | Ce qu’il faut changer |
 |---------|-----------------------|
-| `index.html` | Adresse de retrait, email, numéro WhatsApp, lien Facebook |
-| `js/products.js` | Liste des produits, prix, stocks, créneaux horaires |
-| `images/` | Vos propres photos (gardez les mêmes noms ou mettez à jour le chemin) |
+| `index.html` | Adresse de retrait, email, WhatsApp, Facebook |
+| `js/products.js` | URL de l’API + créneaux horaires |
+| `images/` | Tes propres photos |
 
-### 3. Mettre à jour les stocks (très simple)
+---
 
-Ouvrez `js/products.js` et changez uniquement le chiffre `stock` :
+## Mode simple (sans Google Sheet)
+
+Si tu ne veux pas utiliser Google Sheet, laisse simplement :
 
 ```js
-{
-  id: "tomates",
-  name: "Tomates anciennes",
-  ...
-  stock: 8,   // ← changez ici (0 = épuisé)
-  ...
-}
+const USE_REMOTE_PRODUCTS = false;
 ```
 
-Puis re-uploadez le fichier sur GitHub. C’est tout.
+Les produits restent dans `js/products.js` et tu modifies le stock à la main dans le fichier.
 
-## Améliorations déjà présentes / idées
-
-- **Panier persistant** : le client peut fermer l’onglet et revenir plus tard
-- **Stock bas** : indication visuelle « Plus que X ! »
-- **Mode démo** : tant que Formspree n’est pas configuré, le site montre un résumé de la commande
-- **Créneaux flexibles** : le client coche plusieurs possibilités, vous validez le meilleur
-- **Design soigné** : typographie élégante, couleurs naturelles, responsive
-
-### Idées supplémentaires que vous pouvez ajouter plus tard
-
-- Photo de vous ou du jardin dans la section « À propos »
-- Intégration d’une vraie carte Google Maps (embed gratuit)
-- Bouton WhatsApp flottant
-- Page « Prochaines récoltes » pour donner de la visibilité
-- Ajout d’un code promo simple (via un champ dans le formulaire)
-- Export des commandes vers un Google Sheet (avancé, via Zapier ou Make)
+---
 
 ## Structure des fichiers
 
 ```
 jardin-vente/
-├── index.html          ← page principale
-├── css/styles.css      ← styles
+├── index.html
+├── css/styles.css
 ├── js/
-│   ├── products.js     ← ⭐ produits + créneaux (à modifier souvent)
-│   └── app.js          ← logique (Formspree ici)
-├── images/             ← vos photos
-└── README.md           ← ce fichier
+│   ├── products.js     ← configuration (API + fallback)
+│   └── app.js
+├── images/
+└── README.md
 ```
-
-## Conseils d’utilisation
-
-- Mettez le lien du site en description de vos annonces Facebook / Leboncoin.
-- Répondez rapidement aux précommandes (sous 24h) pour garder la confiance.
-- Mettez les stocks à jour régulièrement, surtout le week-end.
-- Vous pouvez créer plusieurs dépôts si vous voulez tester des versions.
 
 ---
 
-Fait avec soin pour les jardiniers qui vendent leurs surplus 🌱  
-Bonnes récoltes !
+## Astuces
+
+- Tu peux partager le Google Sheet avec un autre compte (conjoint, etc.) pour gérer les stocks à deux.
+- Sur téléphone, l’application Google Sheets est très pratique pour baisser les stocks rapidement.
+- Garde toujours quelques lignes d’exemple dans le tableur pour ne pas te tromper de colonnes.
+- Si le site n’affiche plus les produits, vérifie que le déploiement Apps Script est bien en « Tous ».
+
+Bonnes récoltes ! 🌱

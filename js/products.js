@@ -1,21 +1,35 @@
 // ============================================
-//  PRODUITS – MODIFIEZ ICI FACILEMENT
+//  CONFIGURATION DES PRODUITS & STOCKS
 // ============================================
-// 
-// Pour chaque produit :
-// - id        : identifiant unique (ne changez pas après publication)
-// - name      : nom affiché
-// - category  : "legume" ou "fruit"
-// - price     : prix en euros
-// - unit      : "kg" ou "pièce" ou "botte" etc.
-// - stock     : quantité disponible (0 = épuisé)
-// - image     : chemin de la photo (dans /images/)
-// - description : courte description (optionnel)
 //
-// Astuce : mettez stock à 0 pour masquer temporairement un produit
-//          ou changez simplement la quantité quand vous vendez.
+// DEUX MODES POSSIBLES :
+//
+// 1. MODE SIMPLE (par défaut)
+//    → Les produits sont définis ci-dessous dans PRODUCTS
+//    → Tu modifies le stock à la main dans ce fichier
+//
+// 2. MODE AUTOMATIQUE (recommandé)
+//    → Les produits + stocks viennent d’un Google Sheet
+//    → Tu modifies les stocks directement dans le tableur (depuis ton téléphone)
+//    → Le site se met à jour tout seul
+//
+// Pour activer le mode automatique :
+// 1. Suis le guide dans README.md (section "Gestion automatique des stocks")
+// 2. Remplace l’URL ci-dessous par ton endpoint
+// 3. Mets USE_REMOTE_PRODUCTS à true
 
-const PRODUCTS = [
+const USE_REMOTE_PRODUCTS = false;  // ← passe à true une fois le Google Sheet prêt
+
+// URL de ton API (Google Apps Script ou SheetDB)
+// Exemple Apps Script : "https://script.google.com/macros/s/XXXXXXXX/exec"
+// Exemple SheetDB     : "https://sheetdb.io/api/v1/XXXXXXXX"
+const PRODUCTS_API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+
+// ============================================
+//  PRODUITS DE SECOURS (utilisés si le mode remote est off ou en erreur)
+// ============================================
+const PRODUCTS_FALLBACK = [
   {
     id: "tomates",
     name: "Tomates anciennes",
@@ -79,7 +93,7 @@ const PRODUCTS = [
 ];
 
 // ============================================
-//  CRÉNEAUX DE RETRAIT – MODIFIEZ ICI
+//  CRÉNEAUX DE RETRAIT
 // ============================================
 const PICKUP_SLOTS = [
   { id: "mar-17-19", label: "Mardi 17h – 19h" },
