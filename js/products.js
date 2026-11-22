@@ -23,7 +23,7 @@ const USE_REMOTE_PRODUCTS = false;  // ← passe à true une fois le Google Shee
 // URL de ton API (Google Apps Script ou SheetDB)
 // Exemple Apps Script : "https://script.google.com/macros/s/XXXXXXXX/exec"
 // Exemple SheetDB     : "https://sheetdb.io/api/v1/XXXXXXXX"
-const PRODUCTS_API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+const PRODUCTS_API_URL = "https://script.google.com/macros/s/AKfycbzg1jQmriPmJMCX0XNfna2bgjOUI1ui9xgCfozRysZpsiO1rbQwz5uOl5bIzxK7BbEI/exec";
 
 
 // ============================================
