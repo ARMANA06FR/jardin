@@ -1,0 +1,9 @@
+id,name,category,price,unit,stock,image,description
+tomates,Tomates anciennes,legume,"4,50",kg,8,images/tomates.jpg,"Variétés anciennes, juteuses et parfumées"
+pommes,Pommes Golden,fruit,"2,80",kg,15,images/pommes.jpg,"Croquantes, récoltées à maturité"
+courgettes,Courgettes,legume,"2,50",kg,6,images/courgettes.jpg,"Tendres, parfaites pour la ratatouille"
+carottes,Carottes nouvelles,legume,"3,20",kg,10,images/carottes.jpg,"Avec fanes, goût sucré"
+fraises,Fraises,fruit,"6,00",barquette,4,images/fraises.jpg,Barquette de 250g environ
+pommes-de-terre,Pommes de terre,legume,"1,80",kg,20,images/pommes-de-terre.jpg,Chair ferme
+clementines,Clémentines,fruit,"3,50",kg,12,images/clementines.jpg,"Sans pépins, juteuses"
+citrons,Citrons,fruit,"4,00",kg,7,images/citrons.jpg,"Bio, très parfumés"
