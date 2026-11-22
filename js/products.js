@@ -29,7 +29,7 @@ const USE_REMOTE_PRODUCTS = true;  // ← passe à true une fois le Google Sheet
 // Après chaque modification du script → Déployer → Nouveau déploiement
 // puis colle ici la NOUVELLE URL.
 // ============================================================
-const PRODUCTS_API_URL = "https://script.google.com/macros/s/AKfycbxQsCGV5jxW0aSYmn1CgiTkWnXKrNMZ525nonMNWt_04KlXBEto77Ybl9Mf-qrYi-mN/exec";
+const PRODUCTS_API_URL = "https://script.google.com/macros/s/AKfycbwG1iwm6k2ZApe8rNtio1deNVvyUxtysZBmXo5TouHgEeEH77MjEAOTBwb7RabxL_o/exec";
 
 
 // ============================================
