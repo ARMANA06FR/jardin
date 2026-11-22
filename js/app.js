@@ -224,7 +224,7 @@ function updateCartUI() {
   if (items.length === 0) {
     cartItems.innerHTML = '<p class="empty-cart">Votre panier est vide. Ajoutez des produits ci-dessus.</p>';
     cartTotal.style.display = 'none';
-    submitBtn.disabled = true;
+    if (submitBtn) submitBtn.disabled = true;
   } else {
     cartItems.innerHTML = items.map(item => `
       <div class="cart-item">
@@ -241,17 +241,24 @@ function updateCartUI() {
     
     cartTotal.style.display = 'flex';
     totalPrice.textContent = formatPrice(total);
-    submitBtn.disabled = false;
+    if (submitBtn) submitBtn.disabled = false;
 
     document.querySelectorAll('.cart-item-remove').forEach(btn => {
       btn.addEventListener('click', () => removeFromCart(btn.dataset.id));
     });
   }
 
-  document.getElementById('panierHidden').value = items.map(i => 
-    `${i.name} : ${formatQty(i.qty)} ${i.unit} (${formatPrice(i.price * i.qty)})`
-  ).join('\n');
-  document.getElementById('totalHidden').value = formatPrice(total);
+  // Ces champs n'existent plus après showSuccess() (formulaire remplacé)
+  const panierHidden = document.getElementById('panierHidden');
+  const totalHidden = document.getElementById('totalHidden');
+  if (panierHidden) {
+    panierHidden.value = items.map(i => 
+      `${i.name} : ${formatQty(i.qty)} ${i.unit} (${formatPrice(i.price * i.qty)})`
+    ).join('\n');
+  }
+  if (totalHidden) {
+    totalHidden.value = formatPrice(total);
+  }
 }
 
 function formatPrice(n) {
