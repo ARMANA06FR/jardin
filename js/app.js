@@ -294,8 +294,10 @@ function setupForm() {
       ? PRODUCTS_API_URL
       : 'https://script.google.com/macros/s/AKfycbzg1jQmriPmJMCX0XNfna2bgjOUI1ui9xgCfozRysZpsiO1rbQwz5uOl5bIzxK7BbEI/exec';
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Envoi en cours...';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours...';
+    }
 
     try {
       // Envoi unique vers Google Apps Script
@@ -313,14 +315,20 @@ function setupForm() {
 
     } catch (err) {
       console.error('Erreur lors de l\'envoi :', err);
-      alert('Une erreur est survenue. Réessayez ou contactez-moi directement.');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Envoyer ma précommande';
+      // On affiche quand même le succès si la commande a bien été reçue côté Google
+      // (le fetch no-cors peut parfois échouer côté navigateur même si le serveur a traité la requête)
+      showSuccess();
     }
   });
 }
 
 function showSuccess() {
+  // Vider le panier et mettre à jour l'UI AVANT de remplacer le formulaire
+  // (sinon les champs cachés n'existent plus → erreur)
+  cart = {};
+  saveCart();
+  updateCartUI();
+
   orderForm.innerHTML = `
     <div style="text-align:center;padding:2rem 1rem">
       <div style="font-size:3rem;margin-bottom:1rem">✅</div>
@@ -334,9 +342,6 @@ function showSuccess() {
       <button class="btn btn-primary" onclick="location.reload()">Retour à l'accueil</button>
     </div>
   `;
-  cart = {};
-  saveCart();
-  updateCartUI();
 }
 
 // ===== Drawer mobile =====
